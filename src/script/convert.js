@@ -1,4 +1,4 @@
-const input = document.getElementById("input");
+const input = document.getElementById("fileInput");
 const previewImg = document.getElementById("previewImg");
 const output = document.getElementById("output");
 const resetBtn = document.getElementById("resetBtn");
@@ -72,3 +72,8 @@ copyBtn.addEventListener("click", function () {
 function home(){
   window.location.href = "../../index.html"
 }
+
+document.getElementById('fileInput').addEventListener('change', function() {
+  const fileName = this.files[0]?.name || "No file chosen";
+  document.getElementById('fileNameDisplay').textContent = fileName;
+});

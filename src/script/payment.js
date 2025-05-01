@@ -1,84 +1,143 @@
-const input = document.getElementById("input");
+const input = document.getElementById("fileInput");
 const previewImg = document.getElementById("previewImg");
 const output = document.getElementById("output");
 const resetBtn = document.getElementById("resetBtn");
 const copyBtn = document.getElementById("copyBtn");
 const loader = document.getElementById("loader");
+const progressText = document.getElementById("progressText");
 
-input.addEventListener("change", function () {
-  const file = this.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function () {
-      previewImg.src = reader.result;
-      startOCR(reader.result); 
-    };
-    reader.readAsDataURL(file);
+const supportedLangs = 'eng'; 
+
+input.addEventListener("change", handleImageUpload);
+document.addEventListener("paste", handlePaste);
+document.addEventListener("dragover", e => e.preventDefault());
+document.addEventListener("drop", handleDrop);
+
+resetBtn.addEventListener("click", resetUI);
+copyBtn.addEventListener("click", copyToClipboard);
+
+function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (file && file.type.startsWith("image/")) {
+    readImageFile(file);
   }
-});
+}
 
-document.addEventListener("paste", function (e) {
+function handlePaste(e) {
   const items = e.clipboardData.items;
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].type.indexOf("image") !== -1) {
-      const file = items[i].getAsFile();
-      const reader = new FileReader();
-      reader.onload = function () {
-        previewImg.src = reader.result;
-        startOCR(reader.result); 
-      };
-      reader.readAsDataURL(file);
+  for (let item of items) {
+    if (item.type.indexOf("image") !== -1) {
+      readImageFile(item.getAsFile());
+      break;
     }
   }
-});
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith("image/")) {
+    readImageFile(file);
+  }
+}
+
+function readImageFile(file) {
+  const reader = new FileReader();
+  reader.onload = function () {
+    previewImg.src = reader.result;
+    startOCR(reader.result);
+  };
+  reader.readAsDataURL(file);
+}
 
 function startOCR(imageUrl) {
-    output.value = ""; 
+    output.value = "";
     loader.style.display = "block"; 
+    progressText.style.display = "block";
+    progressText.textContent = "Processing... 0%";
+    loader.className = "loader";
   
     Tesseract.recognize(
       imageUrl,
-      'eng',
+      supportedLangs,
       {
-        logger: m => console.log(m) 
+        logger: m => {
+          if (m.status === "recognizing text") {
+            const percent = Math.floor(m.progress * 100);
+            progressText.textContent = `Processing... ${percent}%`;
+          }
+        }
       }
     ).then(({ data: { text } }) => {
-      const refNoRegex = /Ref\. No\.?\s*([\d\s]+)/i;
-      const match = text.match(refNoRegex);
-      
-      if (match) {
-        const refNo = match[1].replace(/\s+/g, ''); 
-        output.value = refNo; 
-      } else {
-        output.value = "Ref. No. not found";
-      }
-      
-      loader.style.display = "none"; 
+      const cleanText = text.trim();
+      output.value = extractRefNumber(cleanText);
     }).catch(err => {
-      output.value = "Failed to extract text.";
-      loader.style.display = "none";
+      output.value = "❌ Error: Could not extract text.";
       console.error(err);
+    }).finally(() => {
+      loader.style.display = "none";
+      loader.className = ""; 
+      progressText.style.display = "none";
+      progressText.textContent = "";
     });
   }
   
+  function extractRefNumber(text) {
+    const lines = text.split(/\r?\n/); 
+  
+    const refPatterns = [
+      /Ref\.?\s*No\.?\s*[:\-]?\s*([A-Z0-9 ]{6,})/i,
+      /Reference\s*Number\s*[:\-]?\s*([A-Z0-9 ]{6,})/i,
+      /#\s*([A-Z0-9 ]{6,})/i
+    ];
+  
+    for (let line of lines) {
+      for (let regex of refPatterns) {
+        const match = line.match(regex);
+        if (match) {
+          return match[1].replace(/\s+/g, '').trim();
+        }
+      }
+    }
+  
+    for (let line of lines) {
+      const match = line.match(/\b(?:\d{3,}\s*){2,}\b/); 
+      if (match) {
+        return match[0].replace(/\s+/g, '').trim(); 
+      }
+    }
+  
+    return "❗ Ref. No. not found. Your Image is blur";
+  }
+  
 
-resetBtn.addEventListener("click", function () {
+function resetUI() {
   input.value = "";
   previewImg.src = "../assets/image.png";
   output.value = "";
-});
+  loader.style.display = "none";
+  progressText.style.display = "none";
+}
 
-copyBtn.addEventListener("click", function () {
-  navigator.clipboard.writeText(output.value).then(() => {
+function copyToClipboard() {
+  const textToCopy = output.value;
+  if (!textToCopy) return;
+
+  navigator.clipboard.writeText(textToCopy).then(() => {
     copyBtn.textContent = "Copied!";
-    setTimeout(() => {
-      copyBtn.textContent = "Copy";
-    }, 1500);
-  }).catch(err => {
-    console.error("Copy failed:", err);
+    setTimeout(() => copyBtn.textContent = "Copy", 1500);
+  }).catch(() => {
+    // Fallback for older browsers
+    const temp = document.createElement("textarea");
+    temp.value = textToCopy;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
+    alert("Copied to clipboard!");
   });
-});
+}
 
-function home(){
-  window.location.href = "../../index.html"
+function home() {
+  window.location.href = "../../index.html";
 }

@@ -15,15 +15,22 @@
     
     <section class="contents">
       <h1 class="title">Upload a Screenshot of digital receipt of GCASH</h1>
-      
+
       <div class="uploadContent">
-        <label for="input" class="fileLabel">Choose an image</label>
-        <input type="file" id="input" class="input" accept="image/*" />
-        <div class="preview">
-          <img src="../assets/image.png" alt="Preview" id="previewImg"/>
+        <div class="fileInputWrapper">
+          <label for="fileInput">📁 Choose a file</label>
+          <input type="file" id="fileInput" />
+        </div>
+        <span class="fileName" id="fileNameDisplay">No file chosen</span>
+      
+        <div class="preview" id="preview">
+            <img src="../assets/image.png" alt="Preview" id="previewImg"/>
         </div>
       </div>
-      <div class="loader" id="loader" style="display: none;"></div>
+      
+    <div id="loader" style="display:none;"></div>
+    <div id="progressText" style="display:none;">Processing...</div>
+
       <div class="outputContent">
         <h2 class="subtitle">Extracted Reference Number</h2>
         <textarea id="output" placeholder="Your extracted ref# will appear here..." ></textarea>

@@ -56,13 +56,44 @@
     margin-bottom: 0.5rem;
     color: #333;
   }
-  
   .uploadContent {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
     margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 1px dashed #ccc;
+    border-radius: 12px;
+    background-color: #fafafa;
   }
+  
+  .fileInputWrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+  
+  .fileInputWrapper input[type="file"] {
+    display: none;
+  }
+  
+  .fileInputWrapper label {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .fileInputWrapper label:hover {
+    background-color: #333;
+  }
+  
   
   .fileLabel {
     font-weight: 500;
@@ -70,6 +101,14 @@
     cursor: pointer;
     color: #333;
   }
+  
+  .fileName {
+    margin-top: 0.5rem;
+    font-size: 14px;
+    color: #555;
+    font-style: italic;
+  }
+  
   
   .input {
     padding: 0.5rem;
