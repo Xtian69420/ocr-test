@@ -81,36 +81,38 @@ function startOCR(imageUrl) {
       progressText.textContent = "";
     });
   }
-  
+
   function extractRefNumber(text) {
-    const lines = text.split(/\r?\n/); 
+    const lines = text.split(/\r?\n/);
   
-    const refPatterns = [
-      /Ref\.?\s*No\.?\s*[:\-]?\s*([A-Z0-9 ]{6,})/i,
-      /Reference\s*Number\s*[:\-]?\s*([A-Z0-9 ]{6,})/i,
-      /#\s*([A-Z0-9 ]{6,})/i
+    const labelPatterns = [
+      /Ref\.?\s*No\.?/i,
+      /ref\.?\s*no\.?/i,
+      /Reference\s*Number/i,
+      /Ref\s*Number/i
     ];
   
     for (let line of lines) {
-      for (let regex of refPatterns) {
-        const match = line.match(regex);
-        if (match) {
-          return match[1].replace(/\s+/g, '').trim();
+      for (let labelPattern of labelPatterns) {
+        if (labelPattern.test(line)) {
+
+          const match = line.match(/(\d{4,}(?:\s*\d+)+)/);  
+          if (match) {
+
+            const cleanedRefNumber = match[0].replace(/\s+/g, '').trim(); 
+            if (/^\d+$/.test(cleanedRefNumber)) {
+              return cleanedRefNumber;  
+            } else {
+              return "⚠️ Reference number not found. Please try again with a VALID and CLEARER image.";
+            }
+          }
         }
       }
     }
-  
-    for (let line of lines) {
-      const match = line.match(/\b(?:\d{3,}\s*){2,}\b/); 
-      if (match) {
-        return match[0].replace(/\s+/g, '').trim(); 
-      }
-    }
-  
-    return "❗ Ref. No. not found. Your Image is blur";
+
+    return "⚠️ Reference number not found. Please try again with a VALID and CLEARER image.";
   }
   
-
 function resetUI() {
   input.value = "";
   previewImg.src = "../assets/image.png";
@@ -127,7 +129,7 @@ function copyToClipboard() {
     copyBtn.textContent = "Copied!";
     setTimeout(() => copyBtn.textContent = "Copy", 1500);
   }).catch(() => {
-    // Fallback for older browsers
+
     const temp = document.createElement("textarea");
     temp.value = textToCopy;
     document.body.appendChild(temp);

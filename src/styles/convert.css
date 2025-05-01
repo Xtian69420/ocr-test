@@ -180,13 +180,13 @@
     border: 1.5px black solid;
   }
   .loader {
-    border: 8px solid #f3f3f3; /* Light background */
-    border-top: 8px solid #000; /* Black top border for spinning */
+    border: 8px solid #f3f3f3; 
+    border-top: 8px solid #000; 
     border-radius: 50%;
     width: 60px;
     height: 60px;
     animation: spin 1s linear infinite;
-    margin: 2rem auto; /* Center */
+    margin: 2rem auto; 
   }
   
   @keyframes spin {
@@ -194,14 +194,12 @@
     100% { transform: rotate(360deg); }
   }
     
-  /* Tablet */
   @media screen and (max-width: 900px) {
     .title {
       font-size: 24px;
     }
   }
   
-  /* Mobile */
   @media screen and (max-width: 600px) {
     .title {
       font-size: 20px;
