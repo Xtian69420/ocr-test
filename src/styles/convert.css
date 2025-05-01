@@ -25,6 +25,7 @@
     padding: 1rem 2rem;
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
   }
   
   .logo {
@@ -124,7 +125,7 @@
   
   #copyBtn {
     margin-top: 0.75rem;
-    background-color: #2196f3;
+    background-color: #000000;
     color: white;
     padding: 0.6rem 1.2rem;
     font-size: 16px;
@@ -135,7 +136,9 @@
   }
   
   #copyBtn:hover {
-    background-color: #1976d2;
+    background-color: #ffffff;
+    color: #000;
+    border: 1.5px black solid;
   }
   .loader {
     border: 8px solid #f3f3f3; /* Light background */

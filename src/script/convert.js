@@ -68,3 +68,7 @@ copyBtn.addEventListener("click", function () {
     console.error("Copy failed:", err);
   });
 });
+
+function home(){
+  window.location.href = "../../index.html"
+}

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Converter</title>
     <link rel="stylesheet" href="src/styles/style.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +20,7 @@
                 <p class="desc">
                     This process involves extracting readable and editable text from an image using Optical Character Recognition (OCR) technology. It allows users to scan documents, photos, screenshots, or handwritten notes and convert the visual content into digital text that can be copied, edited, or searched. This is useful for digitizing printed material, automating data entry, and enhancing accessibility.
                 </p>
-                <button>Start</button>
+                <button id="convert" onclick="convert()">Start</button>
             </div>
 
             <div class="content" id="right">
@@ -35,5 +36,11 @@
             <p class="desc" id="betchaD">This is a test module developed for the Betcha Booking system. It is designed to automatically identify and extract reference numbers from Online Payment Transactions messages or receipts. This functionality helps simulate and validate payment verification processes within the Betcha Booking workflow. By isolating unique transaction IDs, this test module ensures that future integration of real payment systems will be accurate, efficient, and reliable for both users and administrators.</p>
         </section>
     </div>
+
+    <script>
+        function convert(){
+            window.location.href = "src/page/convert.html";
+        }
+    </script>
 </body>
 </html>
