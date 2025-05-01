@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Convert Image to Text</title>
+  <link rel="stylesheet" href="../styles/payment.css" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <p class="logo" id="home" onclick="home()">Image to Text AI</p>
+    </nav>
+    
+    <section class="contents">
+      <h1 class="title">Upload a Screenshot of digital receipt to get a Referance No.</h1>
+      
+      <div class="uploadContent">
+        <label for="input" class="fileLabel">Choose an image</label>
+        <input type="file" id="input" class="input" accept="image/*" />
+        <div class="preview">
+          <img src="../assets/image.png" alt="Preview" id="previewImg"/>
+        </div>
+      </div>
+      <div class="loader" id="loader" style="display: none;"></div>
+      <div class="outputContent">
+        <h2 class="subtitle">Extracted Reference Number</h2>
+        <textarea id="output" placeholder="Your extracted ref# will appear here..." ></textarea>
+        <button type="button" id="copyBtn">Copy</button>
+      </div>
+      
+      <div class="buttonGroup">
+        <button type="button" id="resetBtn">Reset</button>
+      </div>      
+    </section>
+  </div>
+
+  <script src="../script/payment.js"></script>
+</body>
+</html>
